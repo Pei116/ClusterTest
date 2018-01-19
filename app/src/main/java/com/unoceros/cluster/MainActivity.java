@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import io.scalecube.cluster.Cluster;
+import io.scalecube.transport.Address;
 import io.scalecube.transport.Message;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Member A", "Joined");
             Cluster clusterB = Cluster.joinAwait(seedNode.address());
             Log.d("Member B", "Joined");
+            Cluster clusterC = Cluster.joinAwait(Address.create("192.168.0.2", 4801));
+            Log.d("Member C", "Joined");
 
             // Spread gossip from another member
             clusterB.spreadGossip(
@@ -68,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
                     .subscribe(event ->
                             Log.d("Seed", "Alice received membership: " + event)
                     );
+
+            try {
+                Thread.sleep(500000);
+            } catch (Exception e) {
+                e.getLocalizedMessage();
+            }
 
         }).start();
     }
